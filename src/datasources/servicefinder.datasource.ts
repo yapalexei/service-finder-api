@@ -1,16 +1,14 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
-
+console.log(process.env.HOST);
 const config = {
   name: 'servicefinder',
   connector: 'postgresql',
-  url: 'postgres://skymac:@localhost/service-finder',
-  host: 'localhost',
-  port: 5432,
-  user: 'skymac',
-  password: '',
-  database: 'service-finder',
-  debug: true,
+  host: process.env.POSTGRES_HOST ?? 'localhost',
+  port: process.env.POSTGRES_PORT ?? 5432,
+  user: process.env.POSTGRES_USER ?? 'postgres',
+  password: process.env.POSTGRES_PASSWORD ?? 'pass',
+  database: process.env.POSTGRES_DB ?? 'service-finder',
 };
 
 // Observe application's life cycle to disconnect the datasource when

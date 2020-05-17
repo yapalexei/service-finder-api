@@ -34,8 +34,8 @@
   "repository": {
     "type": "git"
   },
-  "author": "",
-  "license": "",
+  "author": "Alexei Yagolnikov",
+  "license": "MIT",
   "files": [
     "README.md",
     "index.js",
