@@ -15,7 +15,7 @@ Some basic working knowledge of the following software is needed to make this pr
 - postgres/sql
 
 ## 1. The Docker way
-`docker-compose up` - This command runs two services using docker ([get docker](https://docs.docker.com/get-docker/)). One is from a simple [postgres image](https://hub.docker.com/_/postgres) available from [Dockerhub](https://hub.docker.com/) and the other is from a generated image using the local [Dockerfile](./Dockerfile) and source of this project. *The Docker way* is primarily for deployment but can be setup to mirror a folder as a volume within the app image for local development. Once the instances boot up go to [http://localhost:3000](http://localhost:3000)
+`docker-compose up` - This command launches two services using docker ([get docker](https://docs.docker.com/get-docker/)). One is from a simple [postgres image](https://hub.docker.com/_/postgres) available from [Dockerhub](https://hub.docker.com/) and the other is from a generated image using the local [Dockerfile](./Dockerfile) and source of this project. *The Docker way* is primarily for deployment but can be setup to mirror a folder as a volume within the app image for local development. Once the instances boot up go to [http://localhost:3000](http://localhost:3000)
 
 There may be times when `docker-compose up` uses an old image even though you have just built a new image to use. In such cases simply run the following: `docker-compose up --build api db`. This will build the image before `docker-compose` fires it `up`. It seems redundant but it works.
 

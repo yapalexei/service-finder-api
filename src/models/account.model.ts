@@ -40,25 +40,20 @@ export class Account extends Entity {
   }
 
   @property({
-    type: 'date',
-    // defaultFn: 'now',
+    type: 'Date',
     postgresql: {
-      dataType: "timestamp with time zone",
-      nullable: "NO"
+      dataType: "timestamp without time zone",
     }
   })
-  createdAt: string;
+  createdAt: Date;
 
   @property({
-    type: 'date',
-    generated: true,
-    defaultFn: 'now',
+    type: 'Date',
     postgresql: {
-      dataType: "timestamp with time zone",
-      nullable: "YES"
+      dataType: "timestamp without time zone",
     }
   })
-  updatedAt: string;
+  updatedAt: Date;
 }
 
 export interface AccountRelations {

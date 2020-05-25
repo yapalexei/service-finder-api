@@ -51,23 +51,18 @@ export class User extends Entity {
   birthday: number;
 
   @property({
-    type: 'date',
-    generated: true,
-  //   defaultFn: 'now',
+    type: 'Date',
     postgresql: {
-      dataType: "timestamp with time zone",
-      nullable: "NO"
+      dataType: "timestamp without time zone",
     }
   })
   createdAt: Date;
 
   @property({
-    type: 'date',
-    generated: true,
-  //   postgresql: {
-  //     dataType: "timestamp with time zone",
-  //     nullable: "NO"
-  //   }
+    type: 'Date',
+    postgresql: {
+      dataType: "timestamp without time zone",
+    }
   })
   updatedAt: Date;
 

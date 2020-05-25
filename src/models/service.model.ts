@@ -35,25 +35,20 @@ export class Service extends Entity {
   owner?: Account;
 
   @property({
-    type: 'date',
-    generated: true,
+    type: 'Date',
     postgresql: {
-      dataType: "timestamp with time zone",
-      nullable: "NO"
+      dataType: "timestamp without time zone",
     }
   })
-  createdAt: string;
+  createdAt: Date;
 
   @property({
-    type: 'date',
-    generated: true,
-    defaultFn: 'now',
+    type: 'Date',
     postgresql: {
-      dataType: "timestamp with time zone",
-      nullable: "YES"
+      dataType: "timestamp without time zone",
     }
   })
-  updatedAt: string;
+  updatedAt: Date;
 
   constructor(data?: Partial<Service>) {
     super(data);
