@@ -9,7 +9,7 @@ export class Account extends Entity {
     type: 'string',
     required: false,
     defaultFn: 'uuid',
-    generated: false,
+    generated: true,
     useDefaultIdType: false,
     postgresql: {
       dataType: 'uuid',
@@ -41,8 +41,7 @@ export class Account extends Entity {
 
   @property({
     type: 'date',
-    generated: true,
-    defaultFn: 'now',
+    // defaultFn: 'now',
     postgresql: {
       dataType: "timestamp with time zone",
       nullable: "NO"

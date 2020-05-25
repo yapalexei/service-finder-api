@@ -1,0 +1,14 @@
+{
+  "ids": {
+    "Account": 1,
+    "ServiceType": 1,
+    "Service": 1,
+    "User": 2
+  },
+  "models": {
+    "Account": {},
+    "ServiceType": {},
+    "Service": {},
+    "User": {}
+  }
+}

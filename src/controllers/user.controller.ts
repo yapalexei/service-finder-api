@@ -1,21 +1,5 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {del, get, getModelSchemaRef, param, patch, post, put, requestBody} from '@loopback/rest';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 
@@ -146,6 +130,14 @@ export class UserController {
     await this.userRepository.updateById(id, user);
   }
 
+  /**
+   * NOTE: the PUT method originally used replaceById. The change was made due
+   * to constraints made on `createdAt` and `updatedAt` properties. Both are not
+   * settable directly, they are auto set/generated. So, when PUT is used without
+   * those props they would be set to null and the DB will throw an exception.
+   * @param id domain object id
+   * @param user the object that describes the user
+   */
   @put('/users/{id}', {
     responses: {
       '204': {
@@ -157,7 +149,7 @@ export class UserController {
     @param.path.string('id') id: string,
     @requestBody() user: User,
   ): Promise<void> {
-    await this.userRepository.replaceById(id, user);
+    await this.userRepository.updateById(id, user);
   }
 
   @del('/users/{id}', {

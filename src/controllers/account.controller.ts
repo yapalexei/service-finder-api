@@ -130,6 +130,14 @@ export class AccountController {
     await this.accountRepository.updateById(id, account);
   }
 
+  /**
+   * NOTE: the PUT method originally used replaceById. The change was made due
+   * to constraints made on `createdAt` and `updatedAt` properties. Both are not
+   * settable directly, they are auto set/generated. So, when PUT is used without
+   * those props they would be set to null and the DB will throw an exception.
+   * @param id domain object id
+   * @param account the object that describes the account
+   */
   @put('/accounts/{id}', {
     responses: {
       '204': {
@@ -141,7 +149,7 @@ export class AccountController {
     @param.path.string('id') id: string,
     @requestBody() account: Account,
   ): Promise<void> {
-    await this.accountRepository.replaceById(id, account);
+    await this.accountRepository.updateById(id, account);
   }
 
   @del('/accounts/{id}', {

@@ -4,8 +4,15 @@ import {User} from './user.model';
 @model()
 export class Membership extends Entity {
   @property({
+    id: true,
     type: 'string',
-    required: true,
+    required: false,
+    defaultFn: 'uuid',
+    generated: true,
+    useDefaultIdType: false,
+    postgresql: {
+      dataType: 'uuid',
+    },
   })
   id: string;
 

@@ -1,6 +1,5 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
-console.log(process.env.HOST);
 const config = {
   name: 'servicefinder',
   connector: 'postgresql',
@@ -10,7 +9,11 @@ const config = {
   password: process.env.POSTGRES_PASSWORD ?? 'pass',
   database: process.env.POSTGRES_DB ?? 'service-finder',
 };
-
+// const config = {
+//   name: 'servicefinder',
+//   connector: 'memory',
+//   file: "tempData.json",
+// }
 // Observe application's life cycle to disconnect the datasource when
 // application is stopped. This allows the application to be shut down
 // gracefully. The `stop()` method is inherited from `juggler.DataSource`.
@@ -18,11 +21,11 @@ const config = {
 @lifeCycleObserver('datasource')
 export class ServicefinderDataSource extends juggler.DataSource
   implements LifeCycleObserver {
-  static dataSourceName = 'servicefinder';
+  static dataSourceName = config.name;
   static readonly defaultConfig = config;
 
   constructor(
-    @inject('datasources.config.servicefinder', {optional: true})
+    @inject('datasources.config.' + config.name, {optional: true})
     dsConfig: object = config,
   ) {
     super(dsConfig);

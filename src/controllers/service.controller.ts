@@ -130,6 +130,14 @@ export class ServiceController {
     await this.serviceRepository.updateById(id, service);
   }
 
+  /**
+   * NOTE: the PUT method originally used replaceById. The change was made due
+   * to constraints made on `createdAt` and `updatedAt` properties. Both are not
+   * settable directly, they are auto set/generated. So, when PUT is used without
+   * those props they would be set to null and the DB will throw an exception.
+   * @param id domain object id
+   * @param service the object that describes the service
+   */
   @put('/user-provided-services/{id}', {
     responses: {
       '204': {
@@ -141,7 +149,7 @@ export class ServiceController {
     @param.path.string('id') id: string,
     @requestBody() service: Service,
   ): Promise<void> {
-    await this.serviceRepository.replaceById(id, service);
+    await this.serviceRepository.updateById(id, service);
   }
 
   @del('/user-provided-services/{id}', {

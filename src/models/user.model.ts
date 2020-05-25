@@ -1,6 +1,6 @@
 import {Entity, model, property} from '@loopback/repository';
 
-@model({settings: {strict: true}})
+@model({settings: {strict: 'filter'}})
 export class User extends Entity {
   @property({
     id: true,
@@ -53,24 +53,23 @@ export class User extends Entity {
   @property({
     type: 'date',
     generated: true,
-    defaultFn: 'now',
+  //   defaultFn: 'now',
     postgresql: {
       dataType: "timestamp with time zone",
       nullable: "NO"
     }
   })
-  createdAt: string;
+  createdAt: Date;
 
   @property({
     type: 'date',
     generated: true,
-    defaultFn: 'now',
-    postgresql: {
-      dataType: "timestamp with time zone",
-      nullable: "YES"
-    }
+  //   postgresql: {
+  //     dataType: "timestamp with time zone",
+  //     nullable: "NO"
+  //   }
   })
-  updatedAt: string;
+  updatedAt: Date;
 
   // Define well-known properties here
 
