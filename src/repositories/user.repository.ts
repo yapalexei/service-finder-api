@@ -1,17 +1,32 @@
-import {inject} from '@loopback/core';
-import {DefaultCrudRepository} from '@loopback/repository';
+import {inject, Getter} from '@loopback/core';
+import {DefaultCrudRepository, HasOneRepositoryFactory, repository, BelongsToAccessor} from '@loopback/repository';
 import {ServicefinderDataSource} from '../datasources';
-import {User, UserRelations} from '../models';
+import {User, UserRelations, UserCredentials} from '../models';
+import {UserCredentialsRepository} from '.';
+
+export type Credentials = {
+  email: string;
+  password: string;
+  role?: string
+};
 
 export class UserRepository extends DefaultCrudRepository<
   User,
   typeof User.prototype.id,
   UserRelations
 > {
+
+  public readonly userCredentials: HasOneRepositoryFactory<UserCredentials, typeof User.prototype.id>;
+  public readonly owner: BelongsToAccessor<User, typeof User.prototype.id>;
+
   constructor(
     @inject('datasources.servicefinder') dataSource: ServicefinderDataSource,
+    @repository.getter('UserCredentialsRepository')
+    protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
   ) {
     super(User, dataSource);
+    this.userCredentials = this.createHasOneRepositoryFactoryFor('userCredentials', userCredentialsRepositoryGetter);
+    this.registerInclusionResolver('userCredentials', this.userCredentials.inclusionResolver);
   }
 
   definePersistedModel(entityClass: typeof User) {
@@ -27,6 +42,19 @@ export class UserRepository extends DefaultCrudRepository<
       }
     });
     return modelClass;
+  }
+
+  async findCredentials(
+    userId: typeof User.prototype.id,
+  ): Promise<UserCredentials | undefined> {
+    try {
+      return await this.userCredentials(userId).get();
+    } catch (err) {
+      if (err.code === 'ENTITY_NOT_FOUND') {
+        return undefined;
+      }
+      throw err;
+    }
   }
 }
 

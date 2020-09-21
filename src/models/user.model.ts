@@ -1,6 +1,19 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {UserCredentials} from './user-credentials.model';
 
-@model({settings: {strict: 'filter'}})
+@model({settings: {
+  // strict: 'filter',
+  indexes: {
+    uniqueEmail: {
+      keys: {
+        email: 1,
+      },
+      options: {
+        unique: true,
+      },
+    },
+  },
+}})
 export class User extends Entity {
   @property({
     id: true,
@@ -13,7 +26,7 @@ export class User extends Entity {
       dataType: 'uuid',
     },
   })
-  id?: string;
+  id: string;
 
   @property({
     type: 'string',
@@ -51,6 +64,12 @@ export class User extends Entity {
   birthday: number;
 
   @property({
+    type: 'string',
+    nullable: false,
+  })
+  role: string;
+
+  @property({
     type: 'Date',
     postgresql: {
       dataType: "timestamp without time zone",
@@ -65,6 +84,9 @@ export class User extends Entity {
     }
   })
   updatedAt: Date;
+
+  @hasOne(() => UserCredentials)
+  userCredentials: UserCredentials;
 
   // Define well-known properties here
 

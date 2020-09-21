@@ -1,6 +1,5 @@
 import {ApplicationConfig} from '@loopback/core';
 import {ServiceFinderApiApplication} from './application';
-
 export {ServiceFinderApiApplication};
 
 export async function main(options: ApplicationConfig = {}) {
