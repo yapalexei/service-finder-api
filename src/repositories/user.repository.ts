@@ -18,15 +18,25 @@ export class UserRepository extends DefaultCrudRepository<
 
   public readonly userCredentials: HasOneRepositoryFactory<UserCredentials, typeof User.prototype.id>;
   public readonly owner: BelongsToAccessor<User, typeof User.prototype.id>;
+  // public readonly account: HasOneRepositoryFactory<
+  //   Account,
+  //   typeof User.prototype.id
+  // >;
 
   constructor(
     @inject('datasources.servicefinder') dataSource: ServicefinderDataSource,
     @repository.getter('UserCredentialsRepository')
     protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
+    // @repository.getter('AccountRepository')
+    // getAccountRepository: Getter<AccountRepository>,
   ) {
     super(User, dataSource);
     this.userCredentials = this.createHasOneRepositoryFactoryFor('userCredentials', userCredentialsRepositoryGetter);
     this.registerInclusionResolver('userCredentials', this.userCredentials.inclusionResolver);
+    // this.account = this.createHasOneRepositoryFactoryFor(
+    //   'account',
+    //   getAccountRepository,
+    // );
   }
 
   definePersistedModel(entityClass: typeof User) {

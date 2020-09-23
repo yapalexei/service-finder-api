@@ -34,7 +34,3 @@ export namespace UserServiceBindings {
     'services.user.service',
   );
 }
-
-// export namespace UserProfileBindings {
-
-// }

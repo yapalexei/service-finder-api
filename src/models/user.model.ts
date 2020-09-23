@@ -1,4 +1,5 @@
 import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Membership} from './membership.model';
 import {UserCredentials} from './user-credentials.model';
 
 @model({settings: {
@@ -65,9 +66,19 @@ export class User extends Entity {
 
   @property({
     type: 'string',
+    required: true,
     nullable: false,
+    jsonSchema: {
+      enum: ['admin', 'user'],
+    },
   })
   role: string;
+
+  @hasOne(() => Membership, { keyTo: 'userId' })
+  membership: Membership;
+
+  @hasOne(() => UserCredentials)
+  userCredentials: UserCredentials;
 
   @property({
     type: 'Date',
@@ -84,9 +95,6 @@ export class User extends Entity {
     }
   })
   updatedAt: Date;
-
-  @hasOne(() => UserCredentials)
-  userCredentials: UserCredentials;
 
   // Define well-known properties here
 

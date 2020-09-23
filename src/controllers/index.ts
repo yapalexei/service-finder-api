@@ -5,3 +5,4 @@ export * from './service-type.controller';
 export * from './service.controller';
 export * from './user.controller';
 export * from './user-user-credentials.controller';
+export * from './membership.controller';

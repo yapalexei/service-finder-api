@@ -1,4 +1,4 @@
-import {Entity, hasOne, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasOne, model, property} from '@loopback/repository';
 import {Account} from './account.model';
 import {ServiceType} from './service-type.model';
 
@@ -28,11 +28,11 @@ export class Service extends Entity {
   })
   description?: string;
 
-  @hasOne(() => ServiceType)
-  serviceType?: ServiceType;
+  @hasOne(() => ServiceType, { keyTo: 'serviceId' })
+  serviceTypeId?: string;
 
-  @hasOne(() => Account)
-  owner?: Account;
+  @belongsTo(() => Account, { keyTo: 'id' })
+  accountId?: string;
 
   @property({
     type: 'Date',

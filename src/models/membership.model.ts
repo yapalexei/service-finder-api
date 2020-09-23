@@ -1,5 +1,6 @@
-import {Entity, hasOne, model, property} from '@loopback/repository';
-import {User} from './user.model';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {Account, AccountRelations} from './account.model';
+import {UserRelations} from './user.model';
 
 @model()
 export class Membership extends Entity {
@@ -8,7 +9,7 @@ export class Membership extends Entity {
     type: 'string',
     required: false,
     defaultFn: 'uuid',
-    generated: true,
+    generated: false,
     useDefaultIdType: false,
     postgresql: {
       dataType: 'uuid',
@@ -18,18 +19,36 @@ export class Membership extends Entity {
 
   @property({
     type: 'array',
+    required: true,
     itemType: 'string',
+    jsonSchema: {
+      uniqueItems: true,
+      items: [{
+        type: 'string',
+        enum: ['read', 'write'],
+      }],
+      additionalItems: {
+        type: 'string',
+        enum: ['read', 'write'],
+      }
+    }
   })
-  permissions?: string[];
+  permissions: string[];
 
-  @hasOne(() => User)
-  user: User;
+  @property({
+    type: 'string',
+  })
+  userId: string;
+
+  @belongsTo(() => Account)
+  accountId: string;
 
   @property({
     type: 'Date',
     postgresql: {
       dataType: "timestamp without time zone",
-    }
+    },
+    required: false,
   })
   createdAt: Date;
 
@@ -37,7 +56,8 @@ export class Membership extends Entity {
     type: 'Date',
     postgresql: {
       dataType: "timestamp without time zone",
-    }
+    },
+    required: false,
   })
   updatedAt: Date;
 
@@ -48,6 +68,8 @@ export class Membership extends Entity {
 
 export interface MembershipRelations {
   // describe navigational properties here
+  user?: UserRelations,
+  account?: AccountRelations
 }
 
 export type MembershipWithRelations = Membership & MembershipRelations;

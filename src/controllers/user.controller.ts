@@ -9,7 +9,7 @@ import {PasswordHasher} from '../services/hash-password.service';
 import {TokenService, UserService, authenticate} from '@loopback/authentication';
 import {validateCredentials} from '../services/validator.service';
 import _ from 'lodash';
-import {CredentialsRequestBody, UserProfileSchema} from './specs/user-controller.specs';
+import {CredentialsRequestBody, LoginCredentialsRequestBody, UserProfileSchema} from './specs/user-controller.specs';
 import {authorize} from '@loopback/authorization';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 
@@ -101,8 +101,7 @@ export class UserController {
 
       return savedUser;
     } catch (error) {
-      // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+      if (error.code === '23505' && error.constraint === 'uniqueEmail') {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
@@ -184,7 +183,7 @@ export class UserController {
     return this.userRepository.count(where);
   }
 
-  @get('/users/{userId}', {
+  @get('/users/{id}', {
     responses: {
       '200': {
         description: 'User model instance',
@@ -202,10 +201,10 @@ export class UserController {
     voters: [basicAuthorization],
   })
   async findById(
-    @param.path.string('userId') userId: string,
+    @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
-    return this.userRepository.findById(userId, filter);
+    return this.userRepository.findById(id, filter);
   }
 
   @get('/users', {
@@ -250,8 +249,8 @@ export class UserController {
   async printCurrentUser(
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
   ): Promise<User> {
-    const userId = currentUserProfile[securityId];
-    return this.userRepository.findById(userId);
+    const id = currentUserProfile[securityId];
+    return this.userRepository.findById(id);
   }
 
   @post('/users/login', {
@@ -274,7 +273,7 @@ export class UserController {
     },
   })
   async login(
-    @requestBody(CredentialsRequestBody) credentials: Credentials,
+    @requestBody(LoginCredentialsRequestBody) credentials: Credentials,
   ): Promise<{token: string}> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
@@ -288,7 +287,7 @@ export class UserController {
     return {token};
   }
 
-  @patch('/users/{userId}', {
+  @patch('/users/{id}', {
     responses: {
       '204': {
         description: 'User PATCH success',
@@ -301,17 +300,20 @@ export class UserController {
     voters: [basicAuthorization],
   })
   async updateById(
-    @param.path.string('userId') userId: string,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, {
+            partial: true,
+            exclude: ['id', 'role', 'createdAt', 'updatedAt'],
+          }),
         },
       },
     })
-    user: User,
+    user: Omit<User, 'role'>,
   ): Promise<void> {
-    await this.userRepository.updateById(userId, user);
+    await this.userRepository.updateById(id, user);
   }
 
   /**
@@ -336,7 +338,17 @@ export class UserController {
   })
   async replaceById(
     @param.path.string('id') id: string,
-    @requestBody() user: User,
+    @requestBody(
+      {
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(User, {
+              exclude: ['id', 'role', 'createdAt', 'updatedAt'],
+            }),
+          },
+        },
+      }
+    ) user: Omit<User, 'role'>,
   ): Promise<void> {
     await this.userRepository.updateById(id, user);
   }

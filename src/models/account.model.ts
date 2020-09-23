@@ -9,7 +9,7 @@ export class Account extends Entity {
     type: 'string',
     required: false,
     defaultFn: 'uuid',
-    generated: true,
+    generated: false,
     useDefaultIdType: false,
     postgresql: {
       dataType: 'uuid',
@@ -29,7 +29,7 @@ export class Account extends Entity {
   })
   description?: string;
 
-  @hasMany(() => Membership)
+  @hasMany(() => Membership, {keyTo: 'accountId'})
   members?: Membership[];
 
   @hasMany(() => Service)

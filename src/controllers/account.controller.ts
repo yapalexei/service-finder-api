@@ -1,5 +1,8 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
 import {del, get, getModelSchemaRef, param, patch, post, put, requestBody} from '@loopback/rest';
+import {basicAuthorization} from '../middlewares/authentication.voter';
 import {Account} from '../models';
 import {AccountRepository} from '../repositories';
 
@@ -17,13 +20,18 @@ export class AccountController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
+  })
   async create(
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(Account, {
             title: 'NewAccount',
-            exclude: ['id'],
+            exclude: ['id', 'createdAt', 'updatedAt'],
           }),
         },
       },
@@ -41,6 +49,11 @@ export class AccountController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
+  })
   async count(
     @param.where(Account) where?: Where<Account>,
   ): Promise<Count> {
@@ -55,12 +68,17 @@ export class AccountController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Account, {includeRelations: true}),
+              items: getModelSchemaRef(Account),
             },
           },
         },
       },
     },
+  })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
   })
   async find(
     @param.filter(Account) filter?: Filter<Account>,
@@ -68,27 +86,30 @@ export class AccountController {
     return this.accountRepository.find(filter);
   }
 
-  @patch('/accounts', {
-    responses: {
-      '200': {
-        description: 'Account PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Account, {partial: true}),
-        },
-      },
-    })
-    account: Account,
-    @param.where(Account) where?: Where<Account>,
-  ): Promise<Count> {
-    return this.accountRepository.updateAll(account, where);
-  }
+  // @patch('/accounts', {
+  //   responses: {
+  //     '200': {
+  //       description: 'Account PATCH success count',
+  //       content: {'application/json': {schema: CountSchema}},
+  //     },
+  //   },
+  // })
+  // async updateAll(
+  //   @requestBody({
+  //     content: {
+  //       'application/json': {
+  //         schema: getModelSchemaRef(Account, {
+  //           partial: true,
+  //           exclude: ['id', 'createdAt', 'updatedAt'],
+  //         }),
+  //       },
+  //     },
+  //   })
+  //   account: Account,
+  //   @param.where(Account) where?: Where<Account>,
+  // ): Promise<Count> {
+  //   return this.accountRepository.updateAll(account, where);
+  // }
 
   @get('/accounts/{id}', {
     responses: {
@@ -102,6 +123,7 @@ export class AccountController {
       },
     },
   })
+  @authenticate('jwt')
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Account, {exclude: 'where'}) filter?: FilterExcludingWhere<Account>
@@ -116,12 +138,16 @@ export class AccountController {
       },
     },
   })
+  @authenticate('jwt')
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Account, {partial: true}),
+          schema: getModelSchemaRef(Account, {
+            partial: true,
+            exclude: ['id', 'createdAt', 'updatedAt'],
+          }),
         },
       },
     })
@@ -145,9 +171,18 @@ export class AccountController {
       },
     },
   })
+  @authenticate('jwt')
   async replaceById(
     @param.path.string('id') id: string,
-    @requestBody() account: Account,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Account, {
+            exclude: ['id', 'createdAt', 'updatedAt'],
+          }),
+        },
+      },
+    }) account: Account,
   ): Promise<void> {
     await this.accountRepository.updateById(id, account);
   }
@@ -158,6 +193,11 @@ export class AccountController {
         description: 'Account DELETE success',
       },
     },
+  })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.accountRepository.deleteById(id);

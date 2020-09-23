@@ -23,6 +23,12 @@ export class ServiceType extends Entity {
 
   @property({
     type: 'string',
+    required: true,
+  })
+  serviceId: string;
+
+  @property({
+    type: 'string',
   })
   description?: string;
 

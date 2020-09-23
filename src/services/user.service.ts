@@ -52,7 +52,7 @@ export class MyUserService implements UserService<User, Credentials> {
       id: user.id,
       role: user.role,
       name: `${user.firstName} ${user.lastName}`,
-      publicAddress: user.email,
+      email: user.email,
     };
   }
 }

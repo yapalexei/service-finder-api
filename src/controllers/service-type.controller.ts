@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
 import {del, get, getModelSchemaRef, param, patch, post, put, requestBody} from '@loopback/rest';
 import {ServiceType} from '../models';
@@ -17,6 +18,7 @@ export class ServiceTypeController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @requestBody({
       content: {
@@ -41,6 +43,7 @@ export class ServiceTypeController {
       },
     },
   })
+  @authenticate('jwt')
   async count(
     @param.where(ServiceType) where?: Where<ServiceType>,
   ): Promise<Count> {
@@ -62,33 +65,34 @@ export class ServiceTypeController {
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.filter(ServiceType) filter?: Filter<ServiceType>,
   ): Promise<ServiceType[]> {
     return this.serviceTypeRepository.find(filter);
   }
 
-  @patch('/service-types', {
-    responses: {
-      '200': {
-        description: 'ServiceType PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(ServiceType, {partial: true}),
-        },
-      },
-    })
-    serviceType: ServiceType,
-    @param.where(ServiceType) where?: Where<ServiceType>,
-  ): Promise<Count> {
-    return this.serviceTypeRepository.updateAll(serviceType, where);
-  }
+  // @patch('/service-types', {
+  //   responses: {
+  //     '200': {
+  //       description: 'ServiceType PATCH success count',
+  //       content: {'application/json': {schema: CountSchema}},
+  //     },
+  //   },
+  // })
+  // async updateAll(
+  //   @requestBody({
+  //     content: {
+  //       'application/json': {
+  //         schema: getModelSchemaRef(ServiceType, {partial: true}),
+  //       },
+  //     },
+  //   })
+  //   serviceType: ServiceType,
+  //   @param.where(ServiceType) where?: Where<ServiceType>,
+  // ): Promise<Count> {
+  //   return this.serviceTypeRepository.updateAll(serviceType, where);
+  // }
 
   @get('/service-types/{id}', {
     responses: {
@@ -102,6 +106,7 @@ export class ServiceTypeController {
       },
     },
   })
+  @authenticate('jwt')
   async findById(
     @param.path.string('id') id: string,
     @param.filter(ServiceType, {exclude: 'where'}) filter?: FilterExcludingWhere<ServiceType>
@@ -116,6 +121,7 @@ export class ServiceTypeController {
       },
     },
   })
+  @authenticate('jwt')
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -145,6 +151,7 @@ export class ServiceTypeController {
       },
     },
   })
+  @authenticate('jwt')
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() serviceType: ServiceType,
@@ -159,6 +166,7 @@ export class ServiceTypeController {
       },
     },
   })
+  @authenticate('jwt')
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.serviceTypeRepository.deleteById(id);
   }

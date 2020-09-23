@@ -1,3 +1,5 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -17,6 +19,7 @@ import {
   requestBody,
 } from '@loopback/rest';
 import {PasswordHasherBindings} from '../keys';
+import {basicAuthorization} from '../middlewares/authentication.voter';
 import {
   User,
   UserCredentials,
@@ -42,6 +45,11 @@ export class UserUserCredentialsController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
+  })
   async get(
     @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<UserCredentials>,
@@ -56,6 +64,11 @@ export class UserUserCredentialsController {
         content: {'application/json': {schema: getModelSchemaRef(UserCredentials)}},
       },
     },
+  })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
   })
   async create(
     @param.path.string('userId') userId: typeof User.prototype.id,
@@ -89,6 +102,11 @@ export class UserUserCredentialsController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
+  })
   async patch(
     @param.path.string('id') id: string,
     @requestBody({
@@ -117,6 +135,11 @@ export class UserUserCredentialsController {
         content: {'application/json': {schema: CountSchema}},
       },
     },
+  })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
   })
   async delete(
     @param.path.string('id') id: string,
