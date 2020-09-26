@@ -47,35 +47,35 @@
     "!*/__tests__"
   ],
   "dependencies": {
-    "@loopback/authentication": "4.2.5",
-    "@loopback/authorization": "0.5.10",
-    "@loopback/boot": "^2.2.0",
-    "@loopback/context": "3.7.0",
-    "@loopback/core": "^2.5.0",
-    "@loopback/openapi-v3": "^3.3.1",
-    "@loopback/repository": "^2.4.0",
-    "@loopback/rest": "^4.0.0",
-    "@loopback/rest-explorer": "2.2.0",
-    "@loopback/service-proxy": "^2.2.0",
+    "@loopback/authentication": "^6.0.1",
+    "@loopback/authorization": "^0.6.6",
+    "@loopback/boot": "^2.5.1",
+    "@loopback/context": "^3.10.1",
+    "@loopback/core": "^2.9.5",
+    "@loopback/openapi-v3": "^3.4.9",
+    "@loopback/repository": "^2.11.2",
+    "@loopback/rest": "^6.2.0",
+    "@loopback/rest-explorer": "^2.2.10",
+    "@loopback/service-proxy": "^2.3.8",
     "bcryptjs": "^2.4.3",
     "isemail": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
     "loopback-connector-postgresql": "^3.9.1",
-    "tslib": "^1.10.0"
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@loopback/build": "^5.3.1",
-    "@loopback/eslint-config": "^6.0.6",
-    "@loopback/testlab": "^3.1.5",
+    "@loopback/build": "^6.2.2",
+    "@loopback/eslint-config": "^9.0.2",
+    "@loopback/testlab": "^3.2.4",
     "@types/bcryptjs": "^2.4.2",
-    "@types/node": "^10.17.24",
+    "@types/node": "^10.17.28",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.7.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-eslint-plugin": "^2.2.1",
-    "eslint-plugin-mocha": "^6.3.0",
+    "eslint-plugin-mocha": "^7.0.0",
     "source-map-support": "^0.5.19",
-    "typescript": "~3.8.3"
+    "typescript": "~4.0.2"
   }
 }

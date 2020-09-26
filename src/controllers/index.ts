@@ -6,3 +6,8 @@ export * from './service.controller';
 export * from './user.controller';
 export * from './user-user-credentials.controller';
 export * from './membership.controller';
+export * from './membership-user.controller';
+export * from './account-membership.controller';
+export * from './user-membership.controller';
+export * from './account-service.controller';
+export * from './membership-account.controller';

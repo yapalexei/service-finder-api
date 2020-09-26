@@ -1,8 +1,9 @@
 import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, HasOneRepositoryFactory, repository, BelongsToAccessor} from '@loopback/repository';
+import {DefaultCrudRepository, HasOneRepositoryFactory, repository, BelongsToAccessor, HasManyRepositoryFactory} from '@loopback/repository';
 import {ServicefinderDataSource} from '../datasources';
-import {User, UserRelations, UserCredentials} from '../models';
+import {User, UserRelations, UserCredentials, Membership} from '../models';
 import {UserCredentialsRepository} from '.';
+import {MembershipRepository} from './membership.repository';
 
 export type Credentials = {
   email: string;
@@ -18,6 +19,9 @@ export class UserRepository extends DefaultCrudRepository<
 
   public readonly userCredentials: HasOneRepositoryFactory<UserCredentials, typeof User.prototype.id>;
   public readonly owner: BelongsToAccessor<User, typeof User.prototype.id>;
+  public readonly membership: HasOneRepositoryFactory<Membership, typeof User.prototype.id>;
+
+  public readonly memberships: HasManyRepositoryFactory<Membership, typeof User.prototype.id>;
   // public readonly account: HasOneRepositoryFactory<
   //   Account,
   //   typeof User.prototype.id
@@ -26,11 +30,13 @@ export class UserRepository extends DefaultCrudRepository<
   constructor(
     @inject('datasources.servicefinder') dataSource: ServicefinderDataSource,
     @repository.getter('UserCredentialsRepository')
-    protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
+    protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>, @repository.getter('MembershipRepository') protected membershipRepositoryGetter: Getter<MembershipRepository>,
     // @repository.getter('AccountRepository')
     // getAccountRepository: Getter<AccountRepository>,
   ) {
     super(User, dataSource);
+    this.memberships = this.createHasManyRepositoryFactoryFor('memberships', membershipRepositoryGetter,);
+    this.registerInclusionResolver('memberships', this.memberships.inclusionResolver);
     this.userCredentials = this.createHasOneRepositoryFactoryFor('userCredentials', userCredentialsRepositoryGetter);
     this.registerInclusionResolver('userCredentials', this.userCredentials.inclusionResolver);
     // this.account = this.createHasOneRepositoryFactoryFor(

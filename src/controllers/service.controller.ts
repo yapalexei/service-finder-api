@@ -10,7 +10,7 @@ export class ServiceController {
     public serviceRepository : ServiceRepository,
   ) {}
 
-  @post('/user-provided-services', {
+  @post('/services', {
     responses: {
       '200': {
         description: 'Service model instance',
@@ -35,7 +35,7 @@ export class ServiceController {
     return this.serviceRepository.create(service);
   }
 
-  @get('/user-provided-services/count', {
+  @get('/services/count', {
     responses: {
       '200': {
         description: 'Service model count',
@@ -50,7 +50,7 @@ export class ServiceController {
     return this.serviceRepository.count(where);
   }
 
-  @get('/user-provided-services', {
+  @get('/services', {
     responses: {
       '200': {
         description: 'Array of Service model instances',
@@ -72,7 +72,7 @@ export class ServiceController {
     return this.serviceRepository.find(filter);
   }
 
-  // @patch('/user-provided-services', {
+  // @patch('/services', {
   //   responses: {
   //     '200': {
   //       description: 'Service PATCH success count',
@@ -94,7 +94,7 @@ export class ServiceController {
   //   return this.serviceRepository.updateAll(service, where);
   // }
 
-  @get('/user-provided-services/{id}', {
+  @get('/services/{id}', {
     responses: {
       '200': {
         description: 'Service model instance',
@@ -114,7 +114,7 @@ export class ServiceController {
     return this.serviceRepository.findById(id, filter);
   }
 
-  @patch('/user-provided-services/{id}', {
+  @patch('/services/{id}', {
     responses: {
       '204': {
         description: 'Service PATCH success',
@@ -147,7 +147,7 @@ export class ServiceController {
    * @param id domain object id
    * @param service the object that describes the service
    */
-  @put('/user-provided-services/{id}', {
+  @put('/services/{id}', {
     responses: {
       '204': {
         description: 'Service PUT success',
@@ -170,7 +170,7 @@ export class ServiceController {
     await this.serviceRepository.updateById(id, service);
   }
 
-  @del('/user-provided-services/{id}', {
+  @del('/services/{id}', {
     responses: {
       '204': {
         description: 'Service DELETE success',

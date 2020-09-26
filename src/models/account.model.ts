@@ -1,9 +1,14 @@
-import {Entity, hasMany, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property, belongsTo} from '@loopback/repository';
 import {Membership} from './membership.model';
 import {Service} from './service.model';
 
 @model()
 export class Account extends Entity {
+
+  constructor(data?: Partial<Account>) {
+    super(data);
+  }
+
   @property({
     id: true,
     type: 'string',
@@ -29,15 +34,11 @@ export class Account extends Entity {
   })
   description?: string;
 
-  @hasMany(() => Membership, {keyTo: 'accountId'})
-  members?: Membership[];
+  @hasMany(() => Membership)
+  memberships: Membership[];
 
   @hasMany(() => Service)
-  services?: Service[];
-
-  constructor(data?: Partial<Account>) {
-    super(data);
-  }
+  services: Service[];
 
   @property({
     type: 'Date',

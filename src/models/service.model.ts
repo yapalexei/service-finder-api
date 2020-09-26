@@ -28,11 +28,18 @@ export class Service extends Entity {
   })
   description?: string;
 
-  @hasOne(() => ServiceType, { keyTo: 'serviceId' })
-  serviceTypeId?: string;
+  @property({
+    type: 'string',
+    required: true,
+    jsonSchema: {
+      pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$',
+      errorMessage: 'Invalid uuid format.'
+    }
+  })
+  serviceTypeId: string;
 
-  @belongsTo(() => Account, { keyTo: 'id' })
-  accountId?: string;
+  @belongsTo(() => Account)
+  accountId: string;
 
   @property({
     type: 'Date',

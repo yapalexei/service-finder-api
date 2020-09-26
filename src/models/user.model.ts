@@ -1,4 +1,4 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Entity, model, property, hasOne, hasMany} from '@loopback/repository';
 import {Membership} from './membership.model';
 import {UserCredentials} from './user-credentials.model';
 
@@ -68,14 +68,9 @@ export class User extends Entity {
     type: 'string',
     required: true,
     nullable: false,
-    jsonSchema: {
-      enum: ['admin', 'user'],
-    },
   })
   role: string;
 
-  @hasOne(() => Membership, { keyTo: 'userId' })
-  membership: Membership;
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
@@ -96,6 +91,8 @@ export class User extends Entity {
   })
   updatedAt: Date;
 
+  @hasMany(() => Membership)
+  memberships: Membership[];
   // Define well-known properties here
 
   // Indexer property to allow additional data

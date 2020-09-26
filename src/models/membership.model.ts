@@ -1,6 +1,6 @@
-import {belongsTo, Entity, model, property} from '@loopback/repository';
-import {Account, AccountRelations} from './account.model';
-import {UserRelations} from './user.model';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {User} from './user.model';
+import {Account} from './account.model';
 
 @model()
 export class Membership extends Entity {
@@ -17,31 +17,19 @@ export class Membership extends Entity {
   })
   id: string;
 
-  @property({
-    type: 'array',
+  @property.array(String, {
     required: true,
-    itemType: 'string',
     jsonSchema: {
-      uniqueItems: true,
-      items: [{
-        type: 'string',
-        enum: ['read', 'write'],
-      }],
-      additionalItems: {
-        type: 'string',
-        enum: ['read', 'write'],
-      }
+      enum: ['read', 'write'],
     }
   })
   permissions: string[];
 
-  @property({
-    type: 'string',
-  })
-  userId: string;
-
   @belongsTo(() => Account)
   accountId: string;
+
+  @belongsTo(() => User)
+  userId: string;
 
   @property({
     type: 'Date',
@@ -68,8 +56,6 @@ export class Membership extends Entity {
 
 export interface MembershipRelations {
   // describe navigational properties here
-  user?: UserRelations,
-  account?: AccountRelations
 }
 
 export type MembershipWithRelations = Membership & MembershipRelations;
